@@ -32,16 +32,9 @@ pipeline {
         // Stage 2: Lint Client Application
         // ==========================================
         stage('Client Lint') {
-            tools {
-                nodejs 'NodeJS'
-            }
             steps {
                 echo "Running linter on the React application..."
-                dir('client') {
-                    // Install packages and run linter (non-blocking for demo purposes if errors exist)
-                    sh 'npm install'
-                    sh 'npm run lint -- --fix || true'
-                }
+                sh 'docker run --rm -v "$(pwd)/client:/app" -w /app node:18-alpine sh -c "npm install && npm run lint -- --fix || true"'
             }
         }
 
