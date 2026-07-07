@@ -45,10 +45,10 @@ pipeline {
             steps {
                 script {
                     echo "Installing/updating Docker Compose (Go binary)..."
-                    sh 'curl -SL https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-x86_64 -o /usr/bin/docker-compose || wget -O /usr/bin/docker-compose https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-x86_64'
-                    sh 'chmod +x /usr/bin/docker-compose'
+                    sh 'curl -SL https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-x86_64 -o /var/jenkins_home/docker-compose || wget -O /var/jenkins_home/docker-compose https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-x86_64'
+                    sh 'chmod +x /var/jenkins_home/docker-compose'
                     echo "Building Docker Images using Docker Compose..."
-                    sh "docker-compose build"
+                    sh "/var/jenkins_home/docker-compose build"
                 }
             }
         }
@@ -78,8 +78,8 @@ pipeline {
                 script {
                     echo "Deploying application containers locally using docker compose..."
                     // Shut down running services and re-create them with the latest image versions
-                    sh "docker-compose down"
-                    sh "docker-compose up -d"
+                    sh "/var/jenkins_home/docker-compose down"
+                    sh "/var/jenkins_home/docker-compose up -d"
                 }
             }
         }
