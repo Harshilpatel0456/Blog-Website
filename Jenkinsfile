@@ -32,6 +32,9 @@ pipeline {
         // Stage 2: Lint Client Application
         // ==========================================
         stage('Client Lint') {
+            tools {
+                nodejs 'NodeJS'
+            }
             steps {
                 echo "Running linter on the React application..."
                 dir('client') {
