@@ -34,7 +34,7 @@ pipeline {
         stage('Client Lint') {
             steps {
                 echo "Running linter on the React application..."
-                sh 'docker run --rm -v "$(pwd)/client:/app" -w /app node:18-alpine sh -c "npm install && npm run lint -- --fix || true"'
+                sh 'docker run --rm -v jenkins_data:/var/jenkins_home -w /var/jenkins_home/workspace/blog-website-pipeline/client node:18-alpine sh -c "npm install && npm run lint -- --fix || true"'
             }
         }
 
@@ -45,7 +45,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker Images using Docker Compose..."
-                    sh "docker compose build"
+                    sh "docker-compose build"
                 }
             }
         }
@@ -75,8 +75,8 @@ pipeline {
                 script {
                     echo "Deploying application containers locally using docker compose..."
                     // Shut down running services and re-create them with the latest image versions
-                    sh "docker compose down"
-                    sh "docker compose up -d"
+                    sh "docker-compose down"
+                    sh "docker-compose up -d"
                 }
             }
         }
