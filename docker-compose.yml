@@ -25,8 +25,10 @@ services:
       dockerfile: Dockerfile.backend
     ports:
       - "3000:3000"
-    env_file:
-      - ./api/.env
+    environment:
+      - MONGO_URL=${MONGO_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - PORT=3000
     # Optional override: to use the local Mongo container instead of Atlas,
     # you can set MONGO_URL in your api/.env to "mongodb://mongo:27017/blog"
     depends_on:

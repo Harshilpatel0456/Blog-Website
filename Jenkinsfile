@@ -15,6 +15,10 @@ pipeline {
         
         // Version tag for deployment
         IMAGE_TAG = "latest"
+
+        // Secure database and token credentials loaded from Jenkins
+        MONGO_URL = credentials('blog-mongo-url')
+        JWT_SECRET = credentials('blog-jwt-secret')
     }
 
     stages {
