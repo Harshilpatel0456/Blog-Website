@@ -1,5 +1,19 @@
-node_modules
-dist
-.env
-Dockerfile*
-.dockerignore
+# Ignore node modules from local installations
+**/node_modules
+
+# Ignore local build outputs
+**/dist
+**/build
+
+# Ignore version control systems and IDE folders
+.git
+.gitignore
+.vscode
+.idea
+
+# Ignore log files
+**/*.log
+
+# Ignore local environment files
+api/.env
+client/.env

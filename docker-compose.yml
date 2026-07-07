@@ -1,30 +1,60 @@
 version: '3.8'
 
 services:
-  backend:
-    image: yashparmar2055/blog-website-backend:latest  # You can also push this to Docker Hub if needed
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./api/.env
-    volumes:
-      - ./api:/app
-    depends_on:
-      - mongo
-
-  frontend:
-    image: yashparmar2055/my-frontend:latest  # Use public Docker Hub image
-    ports:
-      - "5173:5173"
-    depends_on:
-      - backend
-
+  # ==========================================
+  # 1. MongoDB Database Service
+  # ==========================================
   mongo:
-    image: mongo
+    image: mongo:latest
+    container_name: blog-mongodb
     ports:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    networks:
+      - blog-network
 
+  # ==========================================
+  # 2. Node.js Backend Service
+  # ==========================================
+  backend:
+    image: harshilpatel0456/blog-website-backend:latest
+    container_name: blog-backend
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./api/.env
+    # Optional override: to use the local Mongo container instead of Atlas,
+    # you can set MONGO_URL in your api/.env to "mongodb://mongo:27017/blog"
+    depends_on:
+      - mongo
+    networks:
+      - blog-network
+
+  # ==========================================
+  # 3. Nginx + React Frontend Service
+  # ==========================================
+  frontend:
+    image: harshilpatel0456/my-frontend:latest
+    container_name: blog-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - blog-network
+
+# Define persistent storage volume for MongoDB
 volumes:
   mongo-data:
+
+# Define bridge network for container-to-container communication
+networks:
+  blog-network:
+    driver: bridge

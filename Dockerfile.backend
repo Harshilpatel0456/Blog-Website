@@ -1,23 +1,20 @@
-# Use Node.js image
-FROM node:18
+# Use an official, lightweight Node.js runtime image
+FROM node:18-alpine
 
-# Set working directory inside container
+# Set the working directory inside the container to /app
 WORKDIR /app
 
-# Copy backend package files
+# Copy the package.json and package-lock.json first to leverage Docker's cache layers
 COPY api/package*.json ./
 
-# Install backend dependencies
-RUN npm install
+# Install only production dependencies to keep the image slim
+RUN npm ci --only=production
 
-# Install nodemon globally for development
-RUN npm install -g nodemon
-
-# Copy backend source code
+# Copy the rest of the backend application code
 COPY api/ .
 
-# Expose API port
+# The backend service runs on port 3000
 EXPOSE 3000
 
-# Run the backend in dev mode
-CMD ["npm", "run", "dev"]
+# Define the command to run the backend application
+CMD ["npm", "start"]
